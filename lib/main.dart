@@ -12,19 +12,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: const HomePage(),
       theme: ThemeData(
         primarySwatch: Colors.blue,
         buttonTheme: ButtonThemeData(
           buttonColor: Colors.blue,
-          colorScheme: ColorScheme.light(primary: Colors.blue),
+          colorScheme: const ColorScheme.light(primary: Colors.blue),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
         ),
         scaffoldBackgroundColor: Colors.white,
         primaryColor: Colors.blue,
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           backgroundColor: Colors.blue,
           foregroundColor: Colors.black,
           elevation: 0,

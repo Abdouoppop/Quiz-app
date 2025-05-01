@@ -25,7 +25,7 @@ class TotalScorePart extends StatelessWidget {
           Text(
             "Your Score: $totalScore / $highScore",
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 26, fontWeight: FontWeight.w500, color: Colors.blue),
           ),
         ],
