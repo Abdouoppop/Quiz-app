@@ -8,11 +8,11 @@ class QuestionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(left: 20.0),
       child: Text(
         question.title,
         style: const TextStyle(
-            fontSize: 26, fontWeight: FontWeight.w500, color: Colors.blue),
+            fontSize: 26, fontWeight: FontWeight.w500, color: Colors.black87),
       ),
     );
   }

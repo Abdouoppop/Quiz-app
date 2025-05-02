@@ -16,77 +16,101 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentQuestionIndex = 0;
   int totalScore = 0;
+  int currentSelectedIndex = -1;
   int highScore = questions.length * 10;
   bool isFinished = false;
+  bool currentQuestionIsTrue = false;
+
   @override
   Widget build(BuildContext context) {
-    debugPrint(totalScore.toString());
-
-    debugPrint(currentQuestionIndex.toString());
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Home",
-          style: TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.w500,
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                currentQuestionIndex = 0;
-                totalScore = 0;
-                isFinished = false;
-              });
-            },
-            icon: const Icon(
-              Icons.refresh,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
       body: !isFinished
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                QuestionItem(
-                  question: questions[currentQuestionIndex],
-                ),
-                Column(
-                  children: questions[currentQuestionIndex]
-                      .aveliableAnswer
-                      .map(
-                        (question) => AnswerItem(
-                          answerItemModel: question,
-                          setStateForQusestionIndex: () {
-                            setState(() {
-                              if (question.isTrue) {
-                                totalScore += 10;
-                              }
-                            });
-                            setState(() {
-                              if (currentQuestionIndex < questions.length - 1) {
-                                currentQuestionIndex++;
-                              } else {
-                                debugPrint("End of the quiz");
-                                isFinished = true;
-                              }
-                            });
-                          },
+          ? SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  QuestionItem(
+                    question: questions[currentQuestionIndex],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0, bottom: 10),
+                    child: Text(
+                      "Answer the questions",
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(color: Colors.black54),
+                    ),
+                  ),
+                  Column(
+                    children: List.generate(
+                      questions[currentQuestionIndex].aveliableAnswer.length,
+                      (index) => AnswerItem(
+                        answerItemModel: questions[currentQuestionIndex]
+                            .aveliableAnswer[index],
+                        setStateForQusestionIndex: () {
+                          setState(
+                            () {
+                              currentSelectedIndex = index;
+                              currentQuestionIsTrue =
+                                  questions[currentQuestionIndex]
+                                      .aveliableAnswer[index]
+                                      .isTrue;
+                            },
+                          );
+                        },
+                        isSelected: currentSelectedIndex == index,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: SizedBox(
+                      height: 50,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (currentQuestionIsTrue) {
+                            totalScore += 10;
+                          }
+                          setState(() {
+                            if (currentQuestionIndex < questions.length - 1) {
+                              currentQuestionIndex++;
+                            } else {
+                              debugPrint("End of the quiz");
+                              isFinished = true;
+                              currentQuestionIsTrue = false;
+                            }
+                            currentSelectedIndex = -1;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14)),
                         ),
-                      )
-                      .toList(),
-                )
-              ],
+                        child: const Text(
+                          "Next",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
             )
           : TotalScorePart(
+              onPressed: () {
+                setState(() {
+                  currentQuestionIndex = 0;
+                  totalScore = 0;
+                  isFinished = false;
+                });
+              },
               highScore: highScore,
               totalScore: totalScore,
             ),
